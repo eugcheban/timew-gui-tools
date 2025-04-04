@@ -5,7 +5,7 @@ from PySide6.QtCore import QObject, Slot, QAbstractListModel, QModelIndex, Qt
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import Signal
-
+from datetime import datetime
 
 class TagModel(QAbstractListModel):
     TagRole = Qt.UserRole + 1
@@ -69,6 +69,18 @@ class TagFetcher(QObject):
         except Exception as e:
             print(f"Error fetching tags: {e}")
 
+def BackUpTags():
+    file_name = f'backup_timew_{datetime.today().strftime('%Y-%m-%dT%H:%M:%S.txt')}'
+    path_save = f'/home/mint/Documents/timew-backups/{file_name}'
+
+    try:
+        print("BackUping tags...")
+        result = subprocess.run(['timew', 'export', '>', f'{path_save}'], text=True)
+        print("BackUp done!", result)
+    except Exception as e:
+        print(f"Error fetching tags: {e}")
+    
+
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
@@ -98,4 +110,5 @@ if __name__ == "__main__":
     if not engine.rootObjects():
         sys.exit(-1)
 
+    BackUpTags()
     sys.exit(app.exec())
