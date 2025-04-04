@@ -70,12 +70,15 @@ class TagFetcher(QObject):
             print(f"Error fetching tags: {e}")
 
 def BackUpTags():
-    file_name = f'backup_timew_{datetime.today().strftime('%Y-%m-%dT%H:%M:%S.txt')}'
-    path_save = f'/home/mint/Documents/timew-backups/{file_name}'
+    file_name = f"backup_timew_{datetime.today().strftime('%Y-%m-%dT%H:%M:%S')}.txt"
+    path_save = f'/home/mint/MEGA/{file_name}'
 
     try:
         print("BackUping tags...")
-        result = subprocess.run(['timew', 'export', '>', f'{path_save}'], text=True)
+        result = None
+        with open(path_save, 'w') as file:
+            result = subprocess.run(['timew', 'export'], stdout=file, text=True)
+            
         print("BackUp done!", result)
     except Exception as e:
         print(f"Error fetching tags: {e}")
